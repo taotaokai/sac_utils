@@ -10,13 +10,28 @@
 /*********************** self documentation ******************************/
 char *sdoc[] = {
 "NAME  ",
-"  saccorr ",
+"  xsac_corr - compute correlation between two sac files ",
+" ",
+"SYNOPSIS ",
+"  xsac_corr in= filter= out=corr.out norm=y o=0 b=-inf e=inf ",
 " ",
 "DESCRIPTION ",
 "  cross-correlation with of sliding window normalization  ",
 " ",
-"SYNOPSIS ",
-"  saccorr in= filter= out=corr.out norm=y o=0 b=-inf e=inf ",
+"PARAMETERS ",
+"  string in=  sac file ",
+"  string filter=  sac file to be cross-correlated with in= ",
+"  string out=corr.out  output sac file of the cross-correlation result ",
+"
+"  string norm=y [y/n]  flag for sliding window normalization ",
+"  float k=0.001  normalization coeff. only effective when norm=y ",
+"
+"  The following parameters specfify a time window on filter=
+"  string o=0  reference(zero) time label of filter file ",
+"              any float type header value (e.g. b, t0 etc) ",
+"              or 0 (sac reference time) ",
+"  float b=-inf   window begin time, reference to o ",
+"  float e=inf    window end time, reference to o ",
 " ",
 "COMMENTS ",
 " ",
@@ -53,21 +68,6 @@ char *sdoc[] = {
 " ",
 "  To avoid numerical instability when dividing a very small number during  ",
 "  normalization, a small positive value is added to the sliding norm of in[] ",
-" ",
-"PARAMETERS ",
-"  string in=  sac file ",
-"  string filter=  sac file to be cross-correlated with in= ",
-"  string out=corr.out  output sac file of the cross-correlation result ",
-"
-"  string norm=y [y/n]  flag for sliding window normalization ",
-"  float k=0.001  normalization coeff. only effective when norm=y ",
-"
-"  The following parameters specfify a time window on filter=
-"  string o=0  reference(zero) time label of filter file ",
-"              any float type header value (e.g. b, t0 etc) ",
-"              or 0 (sac reference time) ",
-"  float b=-inf   window begin time, reference to o ",
-"  float e=inf    window end time, reference to o ",
 " ",
 NULL};
 /**************** end self doc *******************************************/

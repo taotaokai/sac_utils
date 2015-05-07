@@ -7,7 +7,7 @@
 #include "sacutil.h"
 
 
-int sacsetdata(sac *tr, float *data, int npts)
+int sac_set_data(sac *tr, float *data, int npts)
 /* modify data in sac 
  *
  */
@@ -37,7 +37,7 @@ error:
 }
 
 
-int sacsetepoch(sac *tr)
+int sac_set_epoch(sac *tr)
 /* set Epoch time for sac
  * sac header accessed: nzyear,nzjday,nzhour,nzmin,nzsecond
  * sac header modified: epoch
@@ -83,7 +83,7 @@ error:
 }
 
 
-int sacsetepochb(sac *tr)
+int sac_set_epochb(sac *tr)
 /* set Epoch time for the first sample in sac 
  * sac header accessed: b,nzyear,nzjday,nzhour,nzmin,nzsec,nzmsec
  * sac header modified: epoch

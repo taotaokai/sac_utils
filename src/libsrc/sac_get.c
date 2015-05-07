@@ -8,11 +8,11 @@
 #include "sacutil.h"
 
 
-int sacgethdidx(char *headername)
-/* find <index> such that SACHD[index].hdnm = <headername>
+int sac_get_head_index(char *headername)
+/* find index value such that SACHD[index].hdnm = <headername>
  *
  * Parameters
- *   headername - pointer to a null-terminated character string
+ *   header_name - pointer to a null-terminated character string
  *
  * Return value
  *   if no error occur, index of the header is returned.
@@ -34,7 +34,7 @@ error:
 }
 
 
-float sacgetfhv(sac *tr, char *headername)
+float sac_get_fhv(sac *tr, char *headername)
 /* get value of float type header field 
  *
  * Parameters
@@ -48,7 +48,7 @@ float sacgetfhv(sac *tr, char *headername)
  *   if not a valid float headername, NAN is returned.
  */
 {
-  int idx=sacgethdidx(headername);
+  int idx=sac_get_head_index(headername);
 
   /* check if a float header */
   check (idx>=SAC_HEADER_FLOAT_MIN && idx<=SAC_HEADER_FLOAT_MAX,

@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
 #include "dbg.h"
 #include "sac.h"
 #include "sacutil.h"
 
 
-int saccut(sac *tr, float b, float e)
+int sac_cut(sac *tr, float b, float e)
 /* cut data between [b,e]
  * 
  */
@@ -44,7 +45,7 @@ int saccut(sac *tr, float b, float e)
   for (i=n1;i<=n2;i++) newdata[i-n1] = tr->data[i];
 
   /* set new data */
-  ret_code = sacsetdata(tr,newdata,n3);
+  ret_code = sac_set_data(tr,newdata,n3);
   check(ret_code==0, "Error set data");
 
   /* modify headers */
@@ -61,7 +62,7 @@ error:
 }
 
 
-int saccutepochb(sac *tr, long t0, long t1)
+int sac_cut_epochb(sac *tr, long t0, long t1)
 /* cut data between [t0,t1], which are represented as epoch time (second)
  * this assumes tr->epoch is set to the time of the first sample.
  * NOTE: only cut data to integer seconds.
