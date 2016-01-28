@@ -1,7 +1,4 @@
 CC = gcc
-#FC = ifort
-#FC = gfortran 
-#FC = mpif90
 
 RM = \rm -rf
 MKDIR_P = \mkdir -p
@@ -12,32 +9,17 @@ inc_dir = include
 src_dir = src
 lib_dir = lib
 
-# netcdf include/ and lib/ directories
-#netcdf_mod = /opt/local/include
-#netcdf_lib = /opt/local/lib
-
 libsrc_dir = ${src_dir}/libsrc
 program_dir = ${src_dir}/program
 
 # gcc
 CCFLAGS = -g -Wall -Wextra -pedantic
 #CCFLAGS = -O2
-CCFLAGS += -I$(inc_dir) -J$(obj_dir) -I$(netcdf_mod)
-#LDFLAGS = -L$(netcdf_lib) -lnetcdff
+CCFLAGS += -I$(inc_dir)
+LDFLAGS = -l SU_getpar
 
-# ifort
-#FCFLAGS = -g
-##FCFLAGS = -O2
-#FCFLAGS += -I $(inc_dir) -module $(obj_dir) -assume byterecl
-#LDFLAGS =
-
-module = sem_constants_mod sem_io_mod sem_mesh_mod \
-		  sem_parallel_mod sem_utils_mod
-shared = gll_library geographic_mod
-program = xsem_interp_xyz \
-		  xsem_slab_model \
-		  xsem_slice_gcircle \
-		  xsem_slice_sphere
+#lib = 
+program = sac_dump
 
 #------------------------------------------
 module_obj = $(patsubst  %,$(obj_dir)/%.o, $(module))

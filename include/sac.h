@@ -202,7 +202,7 @@ sizeof(char)=1*byte
 sizeof(float *)=8*byte (x86_64)
 */
 #define SAC_HEADER_SIZE 632 /* 70*float + 36*int + 2*long + 24*char[8] 
-                             * not including the last (float *)    
+                             * not including the last (float *)data
                              */
 
 /* index of sac header */
@@ -243,6 +243,6 @@ struct _SACHD_ {
   int   type;      /* float=1 int=2 ...  */
 };
 
-extern struct _SACHD_ SACHD[SAC_HEADER_FIELDS]; /* defined in sacget.c */
+extern struct _SACHD_ SACHD[SAC_HEADER_FIELDS]; /* defined in lib/sac_glob_lib.c */
 
 #endif /* SAC_H */

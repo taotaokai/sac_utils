@@ -5,9 +5,89 @@
 #include "sac.h"
 #include "sacutil.h"
 
+/*****************************************/
 
-int sac_validate_file(char *filename)
-/* validate file to be of SAC format
+sac * sac_new(void)
+/* creat sac struct */
+{
+  /* allocate space */
+  sac *tr=NULL;
+  tr = (sac *)calloc(1,sizeof(sac));
+  check_mem(tr);
+
+  /* initialize */
+  tr.npts = 0;
+  tr.iftype = 1;
+  tr.nvhdr = 6;
+
+  return tr;
+
+error:
+  return NULL;
+}
+
+/*****************************************/
+
+sac * sac_new_n(int ntr)
+/* creat sac array */
+{
+    int i=0;
+
+    /* allocate space */
+    sac *tr=NULL;
+    tr = (sac *)calloc(ntr, sizeof(sac));
+    check_mem(tr);
+
+    /* initialize */
+    for (i=0;i<ntr;i++) {
+        tr[i].npts = 0;
+        tr[i].iftype = 1;
+        tr[i].nvhdr = 6;
+    }
+
+    return tr;
+
+error:
+    return NULL;
+}
+
+/*****************************************/
+
+void sac_free(sac *tr)
+/* free sac struct */
+{
+  int i=0;
+
+  /* free memories */
+  if (tr) 
+  {
+    if(tr[i].data) { free(tr[i].data); }
+    free(tr);
+  }
+}
+
+/*****************************************/
+
+void sac_free_n(sac *tr, int ntr)
+/* free sac struct array */
+{
+  int i=0;
+
+  /* free memories */
+  if (tr) 
+  {
+    for (i=0; i<ntr; i++) 
+    {
+      if(tr[i].data) { free(tr[i].data); }
+    }
+    free(tr);
+  }
+}
+
+/*****************************************/
+
+int sac_io_validate(char *filename)
+/* check if a valid SAC file
  *
  * Return value
  *  0 if a valid sac file, else -1
@@ -45,93 +125,14 @@ error:
 
 /*****************************************/
 
-sac * sac_new(void)
-/* creat sac struct */
-{
-  /* allocate space */
-  sac *tr=NULL;
-  tr = (sac *)calloc(1,sizeof(sac));
-  check_mem(tr);
-
-  /* initialize */
-  tr.npts = 0;
-  tr.iftype = 1;
-  tr.nvhdr = 6;
-
-  return tr;
-
-error:
-  return NULL;
-}
-
-/*****************************************/
-
-sac * sac_newn(int ntr)
-/* creat sac array */
-{
-    int i=0;
-
-    /* allocate space */
-    sac *tr=NULL;
-    tr = (sac *)calloc(ntr,sizeof(sac));
-    check_mem(tr);
-
-    /* initialize */
-    for (i=0;i<ntr;i++) {
-        tr[i].npts = 0;
-        tr[i].iftype = 1;
-        tr[i].nvhdr = 6;
-    }
-
-    return tr;
-
-error:
-    return NULL;
-}
-
-/*****************************************/
-
-void sac_free(sac *tr)
-/* free sac struct */
-{
-  int i=0;
-
-  /* free memories */
-  if (tr) 
-  {
-    if(tr[i].data) { free(tr[i].data); }
-    free(tr);
-  }
-}
-
-/*****************************************/
-
-void sac_freen(sac *tr, int ntr)
-/* free sac struct array */
-{
-  int i=0;
-
-  /* free memories */
-  if (tr) 
-  {
-    for (i=0; i<ntr; i++) 
-    {
-      if(tr[i].data) { free(tr[i].data); }
-    }
-    free(tr);
-  }
-}
-
-/*****************************************/
-
-int sac_read(sac *tr, char *sacfile)
+int sac_io_read(sac *tr, char *sacfile)
 /* read sac from a single file */
 {
 	int ret_code; /* return code */
 	float *fpt=NULL;
 
     /* validate file */
-    check(sac_validate_file(sacfile)==0, "ERROR: %s is not sac file", sacfile);
+    check(sac_io_validate(sacfile)==0, "ERROR: %s is not sac file", sacfile);
 
 	/* open sac file */
 	FILE *fp; 
@@ -165,7 +166,7 @@ error:
 
 /*****************************************/
 
-int sac_write(sac *tr, char *sacfile)
+int sac_io_write(sac *tr, char *sacfile)
 /* write sac struct into a single sac file */
 {
 	int ret_code;
