@@ -12,7 +12,7 @@ History:
 
 #include "dbg.h"
 #include "sac.h"
-#include "sacutil.h"
+#include "sac_utils.h"
 
 static char help[]= "command line arguments: <sacfile> [-w<t1>/<t2>]";
 

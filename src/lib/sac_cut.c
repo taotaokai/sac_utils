@@ -4,7 +4,7 @@
 
 #include "dbg.h"
 #include "sac.h"
-#include "sacutil.h"
+#include "sac_utils.h"
 
 
 int sac_cut(sac *tr, float b, float e)
@@ -34,8 +34,8 @@ int sac_cut(sac *tr, float b, float e)
   n2 = (e-tr->b)/tr->delta;
   check(n2>=n1, "no data point between index [%d,%d]",n1,n2);
   
-  debug("saccut: cut range [%f,%f]; data range [%f,%f]",b,e,tr->b,tr->e);
-  debug("saccut: cut index [%d,%d]; data index [0,%d]",n1,n2,tr->npts-1);
+  debug("sac_cut: cut range [%f,%f]; data range [%f,%f]",b,e,tr->b,tr->e);
+  debug("sac_cut: cut index [%d,%d]; data index [0,%d]",n1,n2,tr->npts-1);
 
   /* get cut data array */
   n3 = n2-n1+1;
@@ -96,7 +96,7 @@ int sac_cut_epochb(sac *tr, long t0, long t1)
     n1 = tr->npts-1;
   }
   
-  debug("saccut: cut index [%ld,%ld]; data index [0,%d]",n0,n1,tr->npts-1);
+  debug("sac_cut: cut index [%ld,%ld]; data index [0,%d]",n0,n1,tr->npts-1);
 
   /* get cut data array */
   nn = n1-n0+1;
@@ -106,7 +106,7 @@ int sac_cut_epochb(sac *tr, long t0, long t1)
   for (i=n0;i<=n1;i++) newdata[i-n0] = tr->data[i];
 
   /* set new data */
-  status = sacsetdata(tr,newdata,nn);
+  status = sac_set_data(tr,newdata,nn);
   check(status==0, "Error set data");
 
   /* modify headers */

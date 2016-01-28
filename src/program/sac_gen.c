@@ -8,13 +8,13 @@
 
 #include "dbg.h"
 #include "sac.h"
-#include "sacutil.h"
-#include "par.h"
+#include "sac_utils.h"
+#include "getpar.h"
 
 /*********************** self documentation ******************************/
 char *sdoc[] = {
 "NAME ",
-"  ascii2sac ",
+"  sac_gen",
 " ",
 "DESCRIPTION ",
 "  read from stdin a stream of float numbers and ",
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
   sac *tr=NULL;
   char *tail=NULL;
-  int npts, arraysize;
+  int npts, buffer_size;
   float *data=NULL;
 
   /*=== Get parameters ===*/
@@ -63,16 +63,19 @@ int main(int argc, char *argv[])
   requestdoc(1);
 
   /* get parameter names and ascii values */
-  npar = getargtbl(parname, asciival, MAXPAR);
   /*FIXME: should automatic increase size instead of MAXPAR */
+  npar = getargtbl(parname, asciival, MAXPAR);
 
+  // defaults
   if (!getparstring("out", &out)) out="out.sac";
+  if (!getparfloat("delta", &tr->delta)) tr->delta=1.0;
+  if (!getparfloat("b", &tr->b)) tr->b=0.0;
 
   /*=== Set SAC header values ===*/
-  tr = sacnewn(1);
+  tr = sac_new();
 
   for (i=0; i<npar; i++) {
-    hdidx = sacgethdidx(parname[i]);
+    hdidx = sac_get_head_index(parname[i]);
 
     if (hdidx>=0) { /* if a valid sac header name */
       hdpos = SACHD[hdidx].pos;
@@ -111,15 +114,15 @@ int main(int argc, char *argv[])
 
   /*=== Read numbers from stdin into an array ===*/
   npts=0;
-  arraysize=1;
-  check_mem(data = malloc(sizeof(float)*arraysize));
+  buffer_size=1000;
+  check_mem(data = malloc(sizeof(float)*buffer_size));
   while (scanf("%f", &data[npts]) == 1) {
     debug("data[%d]=%f", npts, data[npts]);
     npts++;
-    if (npts>=arraysize) {
-      arraysize = 2*arraysize;
-      debug("arraysize=%d",arraysize);
-      check_mem(data = realloc(data, sizeof(float)*arraysize));
+    if (npts>=buffer_size) {
+      buffer_size *= 2;
+      debug("double buffer size to %d", buffer_size);
+      check_mem(data = realloc(data, sizeof(float)*buffer_size));
     }
   }
   debug("npts=%d",npts);
@@ -127,19 +130,16 @@ int main(int argc, char *argv[])
   /*=== Write out sac file ===*/
   tr->data=data;
   tr->npts=npts;
-  if (!getparfloat("delta", &tr->delta)) tr->delta=1.0;
-  if (!getparfloat("b", &tr->b)) tr->b=0.0;
   tr->e = tr->b + npts*tr->delta;
-  check(sacwrite(tr, out)==0, "Error write sac: %s", out);
-
+  check(sac_io_write(tr, out)==0, "Error write sac: %s", out);
 
   /*=== Clean up ===*/
-  sacfreen(tr,1);
+  sac_free(tr);
   return 0;
 
 error:
   if (data) free(data);
   tr->data = NULL;
-  sacfreen(tr,1);
+  sac_free(tr);
   return -1;
 }

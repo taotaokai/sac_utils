@@ -4,7 +4,7 @@
 
 #include "dbg.h"
 #include "sac.h"
-#include "sacutil.h"
+#include "sac_utils.h"
 
 
 int sac_set_data(sac *tr, float *data, int npts)

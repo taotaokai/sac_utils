@@ -5,8 +5,8 @@
 
 #include "dbg.h"
 #include "sac.h"
-#include "sacutil.h"
-#include "par.h"
+#include "sac_utils.h"
+#include "getpar.h"
 
 /*********************** self documentation ******************************/
 char *sdoc[] = {

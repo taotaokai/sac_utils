@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 
 #include "dbg.h"
 #include "sac.h"
-#include "sacutil.h"
+#include "sac_utils.h"
 
 /*****************************************/
 
@@ -16,9 +17,9 @@ sac * sac_new(void)
   check_mem(tr);
 
   /* initialize */
-  tr.npts = 0;
-  tr.iftype = 1;
-  tr.nvhdr = 6;
+  tr->npts = 0;
+  tr->iftype = 1;
+  tr->nvhdr = 6;
 
   return tr;
 
@@ -29,7 +30,7 @@ error:
 /*****************************************/
 
 sac * sac_new_n(int ntr)
-/* creat sac array */
+/* creat sac struct array */
 {
     int i=0;
 
@@ -86,7 +87,7 @@ void sac_free_n(sac *tr, int ntr)
 
 /*****************************************/
 
-int sac_io_validate(char *filename)
+int sac_io_isSAC(char *filename)
 /* check if a valid SAC file
  *
  * Return value
@@ -126,13 +127,13 @@ error:
 /*****************************************/
 
 int sac_io_read(sac *tr, char *sacfile)
-/* read sac from a single file */
+/* read one sac file */
 {
 	int ret_code; /* return code */
 	float *fpt=NULL;
 
-    /* validate file */
-    check(sac_io_validate(sacfile)==0, "ERROR: %s is not sac file", sacfile);
+    /* validate sac file */
+    check(sac_io_isSAC(sacfile)==0, "ERROR: %s is not sac file", sacfile);
 
 	/* open sac file */
 	FILE *fp; 
@@ -166,8 +167,29 @@ error:
 
 /*****************************************/
 
+int sac_io_read_n(sac *tr, char **sacfile, int ntr)
+/* read a list of sac files */
+{
+	int ret_code;
+
+	/* read each sac file */
+	int i=0;
+	for (i=0; i<ntr; i++) {
+		ret_code = sac_io_read(&tr[i], sacfile[i]);
+		check(ret_code==0, "Error read sacfile[%d]=%s",i,sacfile[i]);
+	}
+	
+	return 0;
+
+error:
+	return -1;
+}
+
+
+/*****************************************/
+
 int sac_io_write(sac *tr, char *sacfile)
-/* write sac struct into a single sac file */
+/* output one sac file */
 {
 	int ret_code;
 
@@ -194,34 +216,14 @@ error:
 
 /*****************************************/
 
-int sac_readn(sac *tr, char **sacfile, int ntr)
-/* read a list of sac files into sac array */
-{
-	int ret_code;
-
-	/* read each sac file */
-	int i=0;
-	for (i=0; i<ntr; i++) {
-		ret_code = sac_read(&tr[i], sacfile[i]);
-		check(ret_code==0, "Error read sacfile[%d]=%s",i,sacfile[i]);
-	}
-	
-	return 0;
-
-error:
-	return -1;
-}
-
-/*****************************************/
-
-/* write sac array into a list of files */
-int sac_writen(sac *tr, char **sacfile, int ntr)
+int sac_io_write_n(sac *tr, char **sacfile, int ntr)
+/* output sac struct array into a list of files */
 {
 	int i, ret_code=-1;
 
 	/* write each sac file */
 	for (i=0; i<ntr; i++) {
-		ret_code = sac_write(&tr[i], sacfile[i]);
+		ret_code = sac_io_write(&tr[i], sacfile[i]);
 		check(ret_code==0, "Error write sacfile[%d]=%s",i,sacfile[i]);
 	}
 	

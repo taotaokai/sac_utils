@@ -1,0 +1,12 @@
+Import('env')
+
+# lib: sac_utils
+#env.Append()
+
+flags = {'CPPPATH' : ['../lib'], \
+         'LIBPATH' : ['../lib'], \
+         'LIBS' : ['sac_utils', 'getpar'] }
+
+env.MergeFlags(flags)
+
+env.Program('sac_gen', ['sac_gen.c'] )

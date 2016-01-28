@@ -1,0 +1,10 @@
+Import('env')
+
+# toolkit.h is located in this directory, add it to the include path
+#print env['CPPPATH']
+#flags = {'CPPPATH' : ['.'] }
+#env.MergeFlags(flags)
+
+# Let's declare a library named toolkit, using toolkit.c as its only source
+env.Library('sac_utils', ['sac_glob.c', 'sac_io.c', 'sac_cut.c', 'sac_get.c', \
+    'sac_set.c'] )
